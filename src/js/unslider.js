@@ -629,23 +629,24 @@
 	$.fn.unslider = function(opts) {
 		return this.each(function(index,elem) {
 			var $this = $(elem);
-            var unslider = $(elem).data('unslider');
-            if(unslider instanceof $.Unslider) {
-                return;
-            }
+            var unslider = $this.data('unslider');
 			//  Allow usage of .unslider('function_name')
 			//  as well as using .data('unslider') to access the
 			//  main Unslider object
-			if(typeof opts === 'string' && $this.data('unslider')) {
+			if(typeof opts === 'string' && unslider) {
 				opts = opts.split(':');
 
-				var call = $this.data('unslider')[opts[0]];
+				var call = unslider[opts[0]];
 
 				//  Do we have arguments to pass to the string-function?
 				if($.isFunction(call)) {
-					return call.apply($this, opts[1] ? opts[1].split(',') : null);
+					return call.apply($this, opts[1] ? opts[1].split(',') : []);
 				}
 			}
+
+            if(unslider instanceof $.Unslider) {
+                return;
+            }
 
 			return $this.data('unslider', new $.Unslider($this, opts));
 		});
